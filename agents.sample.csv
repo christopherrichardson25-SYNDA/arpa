@@ -1,0 +1,5 @@
+agent_id,nombre,rol,audiencia_tags,pais,tz,ventana_preferida,alcance_est,baseline_RS,baseline_rho,canal,contacto,payout_base,bonus_qrs,bonus_rs,estado
+1,Ing. Mantención Norte,interno,"mineria,conveyors,mantenimiento",CL,America/Santiago,11:00-12:00,3200,0.008,1.9,LinkedIn,ing.mantencion@empresa.cl,5,0.3,10,activo
+2,Postventa Perú,interno,"faena,postventa,operaciones",PE,America/Lima,11:00-12:00,4100,0.011,3.4,LinkedIn,postventa@empresa.pe,5,0.3,10,activo
+3,Partner Correas,partner,"correas,transporte,energía",CL,America/Santiago,14:00-15:00,9800,0.012,3.7,LinkedIn,partner@correas.com,8,0.3,12,activo
+4,KOL Reliability,externo,"reliability,CBM,confiabilidad",CL,America/Santiago,10:00-11:00,12000,0.015,4.2,LinkedIn,kol@reliability.io,15,0.5,15,activo
