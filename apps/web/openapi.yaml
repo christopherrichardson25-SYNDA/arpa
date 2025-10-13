@@ -1,0 +1,29 @@
+
+openapi: 3.0.1
+info: { title: SyndaTools ARPA API, version: "0.1.0" }
+servers: [ { url: https://YOUR_DEPLOY_DOMAIN } ]
+paths:
+  /api/score:
+    post:
+      summary: Calcula RS, ρ y etiqueta para un post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imp: { type: number }
+                sv: { type: number, nullable: true }
+                sh: { type: number }
+                seg: { type: number, nullable: true }
+                watch: { type: number, nullable: true }
+                dur: { type: number, nullable: true }
+      responses: { "200": { description: OK } }
+  /api/mock/linkedin/posts:
+    get: { summary: (Mock) lista posts de la página, responses: { "200": { description: OK } } }
+  /api/mock/linkedin/posts/{id}/stats:
+    get:
+      summary: (Mock) métricas de un post
+      parameters: [ { in: path, name: id, required: true, schema: { type: string } } ]
+      responses: { "200": { description: OK } }
