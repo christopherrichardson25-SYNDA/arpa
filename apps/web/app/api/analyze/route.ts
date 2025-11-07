@@ -1,22 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { buildPrompt } from './prompt'
-import fs from 'node:fs/promises'
+function joinUrl(base: string, path: string) {
+  return `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`
+}
 
 export async function POST(req: NextRequest){
   const { post, metrics=null, goals=null } = await req.json()
-
-  // Carga knowledge local
   const brand = await fs.readFile(process.cwd()+"/knowledge/brand.md","utf-8").catch(()=> "")
   const play  = await fs.readFile(process.cwd()+"/knowledge/playbooks.md","utf-8").catch(()=> "")
 
   const prompt = buildPrompt({ post, metrics, goals, brand, playbooks: play })
 
-  const r = await fetch(process.env.SYNDABRAIN_API_URL!, {
+  // Si tu brain ya responde en la raíz, usa 'complete'.
+  // Si expone /v1/complete, igual queda ok con joinUrl.
+  const url = joinUrl(process.env.SYNDABRAIN_API_URL!, "v1/complete")
+
+  const headers: Record<string,string> = { "Content-Type": "application/json" }
+  if (process.env.SYNDABRAIN_API_KEY) {
+    headers.Authorization = `Bearer ${process.env.SYNDABRAIN_API_KEY}`
+  }
+
+  const r = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.SYNDABRAIN_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify({
       model: process.env.SYNDABRAIN_MODEL || 'gpt-5-synda',
       input: prompt,
@@ -25,7 +29,8 @@ export async function POST(req: NextRequest){
   })
 
   if(!r.ok){
-    return NextResponse.json({ error: await r.text() }, { status: 500 })
+    const txt = await r.text()
+    return NextResponse.json({ error: `Syndabrain error ${r.status}: ${txt}` }, { status: 500 })
   }
   const data = await r.json()
   return NextResponse.json({ result: data })
